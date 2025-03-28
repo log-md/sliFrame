@@ -7,7 +7,7 @@ A Chrome extension that allows you to add Iframes to Google Slides.
 # Installation 
 
 1. Download/unzip <a href='https://logmd.b-cdn.net/public/bundle.zip' target='_blank'>bundle.zip</a>
-2. Go to chrome://extensions/
+2. Go to <a href="chrome://extensions/" target="_blank">chrome://extensions/</a>
 3. Make sure "Developer mode" is on <br><img src='devmode.png' height=40/>
 4. Click "Load unpacked"
 5. Select the `bundle/` folder. 
