@@ -1,0 +1,23 @@
+{
+    "manifest_version": 3,
+    "name": "Iframe Google Slides",
+    "version": "0.0.1",
+    "description": "Converts textbox URLs to Iframes. ",
+    "content_scripts": [
+      {
+        "matches": ["https://docs.google.com/presentation/*"],
+        "js": ["content.js"],
+        "css": ["dist/styles.css"]
+      }
+    ],
+    "action": { 
+      "default_popup": "popup.html"
+    },
+    "permissions": ["activeTab", "storage"],
+    "icons": {
+      "16": "logo/icon-16.png",
+      "32": "logo/icon-32.png",
+      "48": "logo/icon-48.png",
+      "128": "logo/icon-128.png"
+    }
+}
