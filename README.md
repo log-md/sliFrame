@@ -12,10 +12,7 @@ A Chrome extension that allows you to add Iframes to Google Slides.
 4. Click "Load unpacked"
 5. Select the `bundle/` folder. 
 
-
-You need developer mode because Google Store won't publish extensions that inject HTML with JS - if you know a workaround <a href='https://calendly.com/alexander-mathiasen/vchat'>PLEASE LET US KNOW</a> and we'll fix it.
-
-If you know anyone from Google working on Slides -- please just add iFrames natively, huge missing feature everyone wants. 
+The developer mode won't be needed after we get the extension approved by Google Extensions.   
 
 ## Known Bugs 
 
