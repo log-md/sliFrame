@@ -1,4 +1,4 @@
-<img src='demo.png'>
+<img src='demo.jpg'>
 
 # Add Iframe to Google Slides 
 
