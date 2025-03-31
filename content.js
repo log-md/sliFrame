@@ -56,11 +56,49 @@ function calculateOverlayDimensions(textElement) {
         return dimensions;
     }
     else{
+        const isFirefox = navigator.userAgent.toLowerCase().indexOf('firefox') > -1;
+        
+        // firefox editor differs to chrome 
+        if (isFirefox) {
+            const slideId = getSlideId();
+            const mainSlideArea = document.querySelector(`#editor-${slideId}`);
+            const allTexts = mainSlideArea.querySelectorAll('text[text-rendering="geometricPrecision"]');
+            
+            // find text element with the right text. 
+            let targetText = null;
+            for (const text of allTexts) {
+                if (text.textContent.trim() === textElement.textContent.trim()) {
+                    targetText = text;
+                    break;
+                }
+            }
+            try {
+                // get sibling of 8'th ancestor. 
+                let ancestor = targetText;
+                for (let i = 0; i < 8; i++) ancestor = ancestor.parentElement;
+                const previousSibling = ancestor.previousElementSibling;
+                const siblingRect = previousSibling.getBoundingClientRect();
+                return {
+                    left: siblingRect.left+8,
+                    top: siblingRect.top+8,
+                    width: siblingRect.width-16,
+                    height: siblingRect.height-16,
+                    textHeight: targetText.getBoundingClientRect().height*1.2
+                };
+            }
+            catch(e){ return null; }
+        }
+        
+        // Original Chrome approach
         const slideId = getSlideId();
         const grandParent = getGrandparent(textElement, `editor-${slideId}`);
-
+        
         let svg = grandParent;
-        while (svg && svg.tagName !== 'svg') svg = svg.parentElement;
+        while (svg && svg.tagName !== 'svg') {
+            svg = svg.parentElement;
+        }
+        
+        if (!svg) {console.log('no svg found'); return null;}
         
         const svgRect = svg.getBoundingClientRect();
         const grandParentBox = grandParent.getBBox();
@@ -84,7 +122,6 @@ function calculateOverlayDimensions(textElement) {
 
         return dim;
     }
- 
 }
 
 function createOverlaidIframeContainer(textElement, index) {
@@ -133,23 +170,24 @@ function findPresentationTextElement(textContent) {
 }
 
 async function refreshIframes() {
-    // Clear iframes in editor
-    document.querySelectorAll(".gsiframe-container").forEach(
-        container => container.style.display = "none"
-    );
+    const slideId = getSlideId();
     
-    // Clear iframes in presenter (if fullscreen) 
+    // Clear iframes in editor that don't match current slideId
+    document.querySelectorAll(".gsiframe-container").forEach(container => {
+        if (!container.id || !container.id.includes(`-${slideId}-`)) container.style.display = "none";
+    });
+    
+    // Clear iframes in presenter (if fullscreen) that don't match current slideId
     if (isFullscreen) {
         const presentIframes = [...document.querySelectorAll('.punch-present-iframe')];
         const activeIframe = presentIframes.find(f => f.offsetParent !== null);
         if (activeIframe) {
-            activeIframe.contentWindow.document.querySelectorAll('.gsiframe-container').forEach(
-                container => container.style.display = "none"
-            );
+            activeIframe.contentWindow.document.querySelectorAll('.gsiframe-container').forEach(container => {
+                if (!container.id || !container.id.includes(`-${slideId}-`)) container.style.display = "none";
+            });
         }
     }
 
-    const slideId = getSlideId();
     if (!slideId) return;
     let editorP = document.querySelector(`#pages #editor-${slideId}`);
     if (!editorP) return;
@@ -189,6 +227,7 @@ async function refreshIframes() {
         // Make iframe container position/size match textarea. 
         try {
             let dimensions = calculateOverlayDimensions(textElement);
+            console.log('dimensions:', dimensions);
             let top = dimensions.textHeight * 1.4;
             container.style.marginTop = `${top}px`;
             container.style.top = `${dimensions.top}px`;
