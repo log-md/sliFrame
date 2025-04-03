@@ -3,6 +3,9 @@
     [ ] need to refresh after deleting slides 
     [ ] presenter mode loads from scratch 
     [ ] sometimes have to do pre/next slide  to update. 
+
+
+
 */
 let iframes = {};
 
