@@ -1,1 +1,0 @@
-zip bundle.zip -r ./*
